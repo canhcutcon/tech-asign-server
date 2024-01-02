@@ -40,6 +40,8 @@
     "chalk": "^5.3.0",
     "config": "^3.3.9",
     "cron": "^2.3.1",
+    "csv-parse": "^5.5.3",
+    "csv-parser": "^3.0.0",
     "dayjs": "^1.11.8",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",

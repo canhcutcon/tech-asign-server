@@ -1,5 +1,3 @@
-
-export const getUserFeedBack = async (request: Request) => {
+export default class HandlerUserFeedback {
 
 }
-

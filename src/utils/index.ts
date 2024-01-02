@@ -1,5 +1,7 @@
 import { ethers } from "ethers";
 import { Pagination } from "./request-type";
+import fs from 'fs';
+import csv from 'csv-parser';
 
 export function trimslash(s: string) {
 	return s[s.length - 1] === "/" ? s.slice(0, s.length - 1) : s;
@@ -36,18 +38,21 @@ export const paginationData = function (value: any, pagination: { skip: number; 
 	}
 }
 
-export const readDataFromCSV = (csv: string) => {
-	const lines = csv.split("\n")
-	const result = []
-	const headers = lines[0].split(",")
-	for (let i = 1; i < lines.length; i++) {
-		const obj = {}
-		const currentline = lines[i].split(",")
-		for (let j = 0; j < headers.length; j++) {
-			obj[headers[j]] = currentline[j]
-		}
-		result.push(obj)
-	}
-	return result
-}
+export const convertCsvToJson = (filePath: string, jsonFilePath: string, headers: string[]) => {
+	const results = [];
+	fs.createReadStream(filePath)
+		.pipe(csv({ headers: headers })) // Adjust headers based on your CSV file
+		.on('data', (data) => {
+			results.push(data);
+		})
+		.on('end', () => {
+			const jsonData = JSON.stringify(results, null, 2);
+			fs.writeFileSync('output.json', jsonData);
+			console.log(`Conversion complete. JSON data written to ${jsonFilePath}`);
+		})
+		.on('error', (error) => {
+			console.error('Error converting CSV to JSON:', error.message);
+		});
 
+	return results.pop();
+};

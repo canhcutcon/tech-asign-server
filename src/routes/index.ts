@@ -1,18 +1,18 @@
-import { ServerRoute } from 'hapi';
-import EasyRoute from '../utils/easy-route';
+import Joi, { options } from 'joi';
+import Service from 'service';
 
-// const { GET, POST } = EasyRoute.Methods;
+export const UploadFilePayload = {
+    maxBytes: 209715200,
+    output: 'file',
+    parse: true,
+    multipart: true,
+}
 
-// const router = EasyRoute.makeRouter();
-
-// router.group('/api', [
-//     GET('/hello', () => 'Hello World!', {},),
-//     POST('/hello', () => 'Hello World!', {},),
-// ]);
-
-// const serverRoute: ServerRoute[] = router.allRoutes();
-// export default serverRoute;
-
+/**
+kelvin@canhcutcon ~ % curl -X POST http://localhost:3011/upload -H "Content-Type: multipart/form-data" -F "file=@/Users/kelvin/tech-assessment/tech-asign-server/src/data/data.csv"
+curl -X GET http://localhost:3011/list-user-feedback?page=1&limit=10
+curl -X GET "http://localhost:3011/list-user-feedback?page=1&limit=1"
+*/
 export default [
     {
         method: 'GET',
@@ -21,7 +21,24 @@ export default [
     },
     {
         method: 'POST',
-        path: '/hello',
-        handler: () => 'Hello World!',
+        path: '/upload',
+        options: {
+            payload: UploadFilePayload,
+        },
+        handler: Service.upload,
+    },
+    {
+        method: 'GET',
+        path: '/list-user-feedback',
+        options: {
+            validate: {
+                query: Joi.object({
+                    page: Joi.number(),
+                    limit: Joi.number()
+                }),
+            },
+
+        },
+        handler: Service.getListUSerFeedback,
     },
 ]
