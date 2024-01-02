@@ -3,13 +3,6 @@ import { Pagination } from "./request-type";
 import fs from 'fs';
 import csv from 'csv-parser';
 
-export function trimslash(s: string) {
-	return s[s.length - 1] === "/" ? s.slice(0, s.length - 1) : s;
-}
-
-export const randomString = (numberCharacter: number) => {
-	return `${ethers.hexlify(ethers.randomBytes(numberCharacter)).toUpperCase()}`
-}
 export const getPagination = (query: Pagination, defaultLimit = 50) => {
 	const page = query.page || 1
 	const limit = query.limit || defaultLimit
@@ -56,3 +49,13 @@ export const convertCsvToJson = (filePath: string, jsonFilePath: string, headers
 
 	return results.pop();
 };
+
+export const search = (data: any, key: string) => {
+	const result = [];
+	for (const item of data) {
+		if (item.name.includes(key) || item.email.includes(key) || item.body.includes(key)) {
+			result.push(item);
+		}
+	}
+	return result || [];
+}

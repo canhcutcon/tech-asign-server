@@ -34,7 +34,8 @@ export default [
             validate: {
                 query: Joi.object({
                     page: Joi.number(),
-                    limit: Joi.number()
+                    limit: Joi.number(),
+                    key: Joi.string().optional(),
                 }),
             },
 

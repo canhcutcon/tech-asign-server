@@ -1,4 +1,4 @@
-import { convertCsvToJson, paginationData } from "utils";
+import { convertCsvToJson, paginationData, search } from "utils";
 import fs from 'fs';
 
 
@@ -23,7 +23,7 @@ export default class Service {
     }
 
     static getListUSerFeedback = async (req: any) => {
-        const { page, limit } = req?.query;
+        const { page, limit, key } = req?.query;
         const data = await fs.readFileSync('output.json', 'utf8');
         const dataParse = JSON.parse(`${data}`)
         const {
@@ -34,7 +34,7 @@ export default class Service {
             , { page, limit, skip: 0 });
 
         return {
-            data: items,
+            data: key ? search(items, key) : items,
             total,
             totalPages,
             status: 200,
